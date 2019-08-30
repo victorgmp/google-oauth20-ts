@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import passport from 'passport';
 
+import User, { IUser } from '../models/userModel';
+
 class AuthRoutes {
   router: Router;
 
@@ -10,7 +12,41 @@ class AuthRoutes {
   }
 
   routes() {
-    this.router.get('/login', (req, res) => {
+    this.router.get('/register', (req: Request, res: Response) => {
+      res.render('register', { user: req.user });
+    });
+
+    this.router.post('/register', (req: Request, res: Response) => {
+      const { username, password } = req.body;
+      (async function addUser() {
+        try {
+          const user: IUser = await User.findOne({ username });
+          if (!user) {
+            const newUser: IUser = new User({ username, password });
+            await newUser.save();
+            res.status(201).render('login', { user });
+          } else {
+            res.status(400).redirect('/');
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    });
+
+    this.router.post(
+      '/local',
+      passport.authenticate('local', {
+        successRedirect: '/auth/profile',
+        failureRedirect: '/',
+      }),
+      (req: Request, res: Response) => {
+        // res.send(req.user);
+        res.redirect('/profile/');
+      },
+    );
+
+    this.router.get('/login', (req: Request, res: Response) => {
       res.render('login', { user: req.user });
     });
 
@@ -27,7 +63,7 @@ class AuthRoutes {
       }),
     );
 
-    this.router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
+    this.router.get('/google/redirect', passport.authenticate('google'), (req: Request, res: Response) => {
       // res.send(req.user);
       res.redirect('/profile/');
     });
