@@ -1,26 +1,31 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>OAuth Tutorials</title>
+    <title>Login</title>
     <style>
       body {
         font-family: arial;
         margin: 0;
       }
+
       nav {
         background: #ff5353;
         padding: 20px 10px;
       }
+
       nav ul {
         max-width: 960px;
         margin: 0 auto;
         padding: 0;
       }
+
       nav li {
         list-style-type: none;
         display: inline-block;
         margin: 0 10px 0 0;
       }
+
       nav a {
         color: #fff;
         font-size: 18px;
@@ -29,6 +34,7 @@
         padding: 10px;
         display: block;
       }
+
       main,
       header {
         max-width: 960px;
@@ -36,8 +42,17 @@
         padding: 0 10px;
         color: #333;
       }
+
+      .google-btn {
+        color: #fff;
+        font-size: 18px;
+        background: #ff5353;
+        text-decoration: none;
+        padding: 10px;
+      }
     </style>
   </head>
+
   <body>
     <nav>
       <ul>
@@ -52,15 +67,13 @@
       </ul>
     </nav>
     <header>
-      <h1>Net Ninja OAuth Tut's</h1>
-      <h2>Homepage</h2>
+      <h1>Register</h1>
     </header>
     <main>
-      <p>Probably the best OAuth tutorials on the planet :)</p>
       <div class="row">
         <br />
         <div class="col-md-2 col-sm-3 text-center">
-          <form name="signInForm" action="/auth/local" method="post">
+          <form name="signInForm" action="/auth/register" method="post">
             UserName: <input name="username" id="username" /><br />
             Password: <input name="password" id="password" /><br />
             <input type="submit" value="Sign in" />
