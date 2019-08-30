@@ -22,8 +22,6 @@ class App {
     this.settings();
     this.middlewares();
     this.views();
-    this.cookies();
-    this.passportInit();
     this.routes();
   }
   // settings
@@ -35,25 +33,21 @@ class App {
     this.app.use(morgan('dev'));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
-  }
-  // set up view engine
-  private views() {
-    this.app.set('views', './src/views');
-    this.app.set('view engine', 'ejs');
-  }
-  // set up cookies
-  private cookies() {
+    // set up cookies
     this.app.use(
       cookieSession({
         maxAge: 24 * 60 * 60 * 1000,
         keys: [process.env.cookiekey],
       }),
     );
-  }
-  // initialize passport
-  private passportInit() {
+    // initialize passport
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+  }
+  // set up view engine
+  private views() {
+    this.app.set('views', './src/views');
+    this.app.set('view engine', 'ejs');
   }
   // set up routes
   private routes() {
