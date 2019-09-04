@@ -37,7 +37,7 @@ class AuthRoutes {
     this.router.post(
       '/local',
       passport.authenticate('local', {
-        successRedirect: '/auth/profile',
+        successRedirect: '/profile',
         failureRedirect: '/',
       }),
       (req: Request, res: Response) => {

@@ -1,21 +1,23 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy, Profile, VerifyCallback } from 'passport-google-oauth20';
+import { Strategy as LocalStrategy } from 'passport-local';
 import { config as configEnv } from 'dotenv';
 // require our environment variables
 configEnv();
 import User, { IUser } from '../models/userModel';
 
 const passportSetup = () => {
+  // Stores user in session
   passport.serializeUser((user: IUser, done: any) => {
     done(null, user.id);
   });
-
+  // Retrive user from session
   passport.deserializeUser(async (id: string, done: any) => {
     await User.findById(id).then((user: IUser) => {
       done(null, user);
     });
   });
-
+  // google strategy
   passport.use(
     new GoogleStrategy(
       {
@@ -46,6 +48,32 @@ const passportSetup = () => {
           }
         } catch (err) {
           console.log(err);
+        }
+      },
+    ),
+  );
+
+  // local strategy
+  passport.use(
+    new LocalStrategy(
+      {
+        usernameField: 'username',
+        passwordField: 'password',
+      },
+      async (username: string, password: string, done: any) => {
+        const user: IUser = await User.findOne({ username });
+        try {
+          // check if user already exist in our db
+          if (!user) {
+            done(null, false, { message: 'Incorrect username' });
+          }
+          if (user.password === password) {
+            done(null, user);
+          } else {
+            done(null, false, { message: 'Incorrect password' });
+          }
+        } catch (err) {
+          console.log(err.stack);
         }
       },
     ),
